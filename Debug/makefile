@@ -42,29 +42,11 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(strip $(SRC_DEPS)),)
--include $(SRC_DEPS)
-endif
-ifneq ($(strip $(JMP_DEPS)),)
--include $(JMP_DEPS)
-endif
-ifneq ($(strip $(PP_DEPS)),)
--include $(PP_DEPS)
-endif
-ifneq ($(strip $(SX_DEPS)),)
--include $(SX_DEPS)
-endif
-ifneq ($(strip $(FSY_DEPS)),)
--include $(FSY_DEPS)
-endif
 ifneq ($(strip $(ASM_DEPS)),)
 -include $(ASM_DEPS)
 endif
 ifneq ($(strip $(S_UPPER_DEPS)),)
 -include $(S_UPPER_DEPS)
-endif
-ifneq ($(strip $(P_DEPS)),)
--include $(P_DEPS)
 endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
@@ -88,7 +70,7 @@ all: GUIApp_Hector.elf secondary-outputs
 GUIApp_Hector.elf: $(OBJS) $(USER_OBJS) $(LINKER_SCRIPT)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU ARM Cross C Linker'
-	$(file > GUIApp_Hector.elf.in,-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -T "C:\\Users\\Hector Guarneros\\e2_studio\\workspace\\GUIApp_Hector\\script/s7g2.ld" -Xlinker --gc-sections -L "C:\\Users\\Hector Guarneros\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\bsp\\cmsis\\DSP_Lib\\cm4_gcc" -L "C:\\Users\\Hector Guarneros\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\gx\\cm4_gcc" -L "C:\\Users\\Hector Guarneros\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\tx\\cm4_gcc" -Wl,-Map,"GUIApp_Hector.map" --specs=nano.specs --specs=rdimon.specs -o "GUIApp_Hector.elf" -Wl,--start-group $(OBJS) $(USER_OBJS) $(LIBS) -Wl,--end-group)
+	$(file > GUIApp_Hector.elf.in,-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -T "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\script/s7g2.ld" -Xlinker --gc-sections -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\bsp\\cmsis\\DSP_Lib\\cm4_gcc" -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\gx\\cm4_gcc" -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\tx\\cm4_gcc" -Wl,-Map,"GUIApp_Hector.map" --specs=nano.specs --specs=rdimon.specs -o "GUIApp_Hector.elf" -Wl,--start-group $(OBJS) $(USER_OBJS) $(LIBS) -Wl,--end-group)
 	arm-none-eabi-gcc @"GUIApp_Hector.elf.in"
 	@echo 'Finished building target: $@'
 	@echo ' '
@@ -107,31 +89,6 @@ GUIApp_Hector.siz: GUIApp_Hector.elf
 
 # Other Targets
 clean:
-ifneq ($(strip $(SRC_DEPS)),)
-	-$(file > clean_SRC_DEPS.tmp, $(SRC_DEPS))
-	-@ xargs -s 6000 -t -a clean_SRC_DEPS.tmp $(RM)
-	-@$(RM) clean_SRC_DEPS.tmp
-endif
-ifneq ($(strip $(JMP_DEPS)),)
-	-$(file > clean_JMP_DEPS.tmp, $(JMP_DEPS))
-	-@ xargs -s 6000 -t -a clean_JMP_DEPS.tmp $(RM)
-	-@$(RM) clean_JMP_DEPS.tmp
-endif
-ifneq ($(strip $(PP_DEPS)),)
-	-$(file > clean_PP_DEPS.tmp, $(PP_DEPS))
-	-@ xargs -s 6000 -t -a clean_PP_DEPS.tmp $(RM)
-	-@$(RM) clean_PP_DEPS.tmp
-endif
-ifneq ($(strip $(SX_DEPS)),)
-	-$(file > clean_SX_DEPS.tmp, $(SX_DEPS))
-	-@ xargs -s 6000 -t -a clean_SX_DEPS.tmp $(RM)
-	-@$(RM) clean_SX_DEPS.tmp
-endif
-ifneq ($(strip $(FSY_DEPS)),)
-	-$(file > clean_FSY_DEPS.tmp, $(FSY_DEPS))
-	-@ xargs -s 6000 -t -a clean_FSY_DEPS.tmp $(RM)
-	-@$(RM) clean_FSY_DEPS.tmp
-endif
 ifneq ($(strip $(OBJS)),)
 	-$(file > clean_OBJS.tmp, $(OBJS))
 	-@ xargs -s 6000 -t -a clean_OBJS.tmp $(RM)
@@ -156,11 +113,6 @@ ifneq ($(strip $(S_UPPER_DEPS)),)
 	-$(file > clean_S_UPPER_DEPS.tmp, $(S_UPPER_DEPS))
 	-@ xargs -s 6000 -t -a clean_S_UPPER_DEPS.tmp $(RM)
 	-@$(RM) clean_S_UPPER_DEPS.tmp
-endif
-ifneq ($(strip $(P_DEPS)),)
-	-$(file > clean_P_DEPS.tmp, $(P_DEPS))
-	-@ xargs -s 6000 -t -a clean_P_DEPS.tmp $(RM)
-	-@$(RM) clean_P_DEPS.tmp
 endif
 ifneq ($(strip $(C_DEPS)),)
 	-$(file > clean_C_DEPS.tmp, $(C_DEPS))

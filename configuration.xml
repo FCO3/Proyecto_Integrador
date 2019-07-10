@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<synergyConfiguration version="4">
+<synergyConfiguration version="3">
   <generalSettings>
     <option key="#Board#" value="board.s7g2_sk"/>
     <option key="CPU" value="S7G2"/>

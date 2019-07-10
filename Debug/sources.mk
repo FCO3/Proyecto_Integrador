@@ -2,30 +2,17 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-ASM_SRCS := 
-S_UPPER_SRCS := 
-O_SRCS := 
 ELF_SRCS := 
 OBJ_SRCS := 
-SX_SRCS := 
-LINKER_SCRIPT := 
-PP_SRCS := 
-FSY_SRCS := 
-P_SRCS := 
-SRC_SRCS := 
-JMP_SRCS := 
+ASM_SRCS := 
 C_SRCS := 
-SRC_DEPS := 
-JMP_DEPS := 
-PP_DEPS := 
-SX_DEPS := 
-FSY_DEPS := 
+S_UPPER_SRCS := 
+O_SRCS := 
 OBJS := 
 SECONDARY_FLASH := 
 SECONDARY_SIZE := 
 ASM_DEPS := 
 S_UPPER_DEPS := 
-P_DEPS := 
 C_DEPS := 
 
 # Every subdirectory with source files must be described here
