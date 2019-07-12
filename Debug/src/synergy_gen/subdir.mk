@@ -9,6 +9,7 @@ C_SRCS += \
 ../src/synergy_gen/main.c \
 ../src/synergy_gen/main_thread.c \
 ../src/synergy_gen/message_data.c \
+../src/synergy_gen/new_thread0.c \
 ../src/synergy_gen/pin_data.c 
 
 OBJS += \
@@ -17,6 +18,7 @@ OBJS += \
 ./src/synergy_gen/main.o \
 ./src/synergy_gen/main_thread.o \
 ./src/synergy_gen/message_data.o \
+./src/synergy_gen/new_thread0.o \
 ./src/synergy_gen/pin_data.o 
 
 C_DEPS += \
@@ -25,6 +27,7 @@ C_DEPS += \
 ./src/synergy_gen/main.d \
 ./src/synergy_gen/main_thread.d \
 ./src/synergy_gen/message_data.d \
+./src/synergy_gen/new_thread0.d \
 ./src/synergy_gen/pin_data.d 
 
 
