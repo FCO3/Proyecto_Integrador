@@ -10,33 +10,18 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include synergy/ssp_supplemental/touch_drivers/touch_panel_i2c_sx8654/subdir.mk
--include synergy/ssp/src/framework/tes/dave2d/subdir.mk
--include synergy/ssp/src/framework/sf_touch_panel_i2c/subdir.mk
--include synergy/ssp/src/framework/sf_tes_2d_drw/subdir.mk
--include synergy/ssp/src/framework/sf_message/subdir.mk
--include synergy/ssp/src/framework/sf_jpeg_decode/subdir.mk
--include synergy/ssp/src/framework/sf_external_irq/subdir.mk
--include synergy/ssp/src/framework/sf_el_gx/subdir.mk
--include synergy/ssp/src/driver/r_sci_spi/subdir.mk
--include synergy/ssp/src/driver/r_riic/subdir.mk
--include synergy/ssp/src/driver/r_jpeg_decode/subdir.mk
--include synergy/ssp/src/driver/r_jpeg_common/subdir.mk
 -include synergy/ssp/src/driver/r_ioport/subdir.mk
--include synergy/ssp/src/driver/r_icu/subdir.mk
--include synergy/ssp/src/driver/r_glcd/subdir.mk
 -include synergy/ssp/src/driver/r_fmi/subdir.mk
 -include synergy/ssp/src/driver/r_elc/subdir.mk
--include synergy/ssp/src/driver/r_dtc/subdir.mk
 -include synergy/ssp/src/driver/r_cgc/hw/subdir.mk
 -include synergy/ssp/src/driver/r_cgc/subdir.mk
+-include synergy/ssp/src/driver/r_agt/subdir.mk
+-include synergy/ssp/src/driver/r_adc/subdir.mk
 -include synergy/ssp/src/bsp/mcu/s7g2/subdir.mk
 -include synergy/ssp/src/bsp/mcu/all/subdir.mk
 -include synergy/ssp/src/bsp/cmsis/Device/RENESAS/S7G2/Source/subdir.mk
 -include synergy/board/s7g2_sk/subdir.mk
 -include src/synergy_gen/subdir.mk
--include src/hardware/subdir.mk
--include src/gui/subdir.mk
 -include src/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -56,35 +41,17 @@ endif
 -include ../makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
-SECONDARY_FLASH += \
-GUIApp_Hector.srec \
-
-SECONDARY_SIZE += \
-GUIApp_Hector.siz \
-
 
 # All Target
-all: GUIApp_Hector.elf secondary-outputs
+all: libm_Proyecto_Integrador.a
 
 # Tool invocations
-GUIApp_Hector.elf: $(OBJS) $(USER_OBJS) $(LINKER_SCRIPT)
+libm_Proyecto_Integrador.a: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: GNU ARM Cross C Linker'
-	$(file > GUIApp_Hector.elf.in,-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -T "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\script/s7g2.ld" -Xlinker --gc-sections -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\bsp\\cmsis\\DSP_Lib\\cm4_gcc" -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\gx\\cm4_gcc" -L "C:\\Users\\SEI203\\e2_studio\\workspace\\GUIApp_Hector\\synergy\\ssp\\src\\framework\\el\\tx\\cm4_gcc" -Wl,-Map,"GUIApp_Hector.map" --specs=nano.specs --specs=rdimon.specs -o "GUIApp_Hector.elf" -Wl,--start-group $(OBJS) $(USER_OBJS) $(LIBS) -Wl,--end-group)
-	arm-none-eabi-gcc @"GUIApp_Hector.elf.in"
+	@echo 'Invoking: Cross ARM GNU Archiver'
+	$(file > libm_Proyecto_Integrador.a.in,-r  "libm_Proyecto_Integrador.a" $(OBJS) $(USER_OBJS) $(LIBS))
+	arm-none-eabi-ar @"libm_Proyecto_Integrador.a.in"
 	@echo 'Finished building target: $@'
-	@echo ' '
-
-GUIApp_Hector.srec: GUIApp_Hector.elf
-	@echo 'Invoking: GNU ARM Cross Create Flash Image'
-	arm-none-eabi-objcopy -O srec "GUIApp_Hector.elf"  "GUIApp_Hector.srec"
-	@echo 'Finished building: $@'
-	@echo ' '
-
-GUIApp_Hector.siz: GUIApp_Hector.elf
-	@echo 'Invoking: GNU ARM Cross Print Size'
-	arm-none-eabi-size --format=berkeley "GUIApp_Hector.elf"
-	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
@@ -94,15 +61,10 @@ ifneq ($(strip $(OBJS)),)
 	-@ xargs -s 6000 -t -a clean_OBJS.tmp $(RM)
 	-@$(RM) clean_OBJS.tmp
 endif
-ifneq ($(strip $(SECONDARY_FLASH)),)
-	-$(file > clean_SECONDARY_FLASH.tmp, $(SECONDARY_FLASH))
-	-@ xargs -s 6000 -t -a clean_SECONDARY_FLASH.tmp $(RM)
-	-@$(RM) clean_SECONDARY_FLASH.tmp
-endif
-ifneq ($(strip $(SECONDARY_SIZE)),)
-	-$(file > clean_SECONDARY_SIZE.tmp, $(SECONDARY_SIZE))
-	-@ xargs -s 6000 -t -a clean_SECONDARY_SIZE.tmp $(RM)
-	-@$(RM) clean_SECONDARY_SIZE.tmp
+ifneq ($(strip $(ARCHIVES)),)
+	-$(file > clean_ARCHIVES.tmp, $(ARCHIVES))
+	-@ xargs -s 6000 -t -a clean_ARCHIVES.tmp $(RM)
+	-@$(RM) clean_ARCHIVES.tmp
 endif
 ifneq ($(strip $(ASM_DEPS)),)
 	-$(file > clean_ASM_DEPS.tmp, $(ASM_DEPS))
@@ -119,10 +81,8 @@ ifneq ($(strip $(C_DEPS)),)
 	-@ xargs -s 6000 -t -a clean_C_DEPS.tmp $(RM)
 	-@$(RM) clean_C_DEPS.tmp
 endif
-	-$(RM)  GUIApp_Hector.elf
+	-$(RM)  libm_Proyecto_Integrador.a
 	-@echo ' '
-
-secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
 
 .PHONY: all clean dependents
 
