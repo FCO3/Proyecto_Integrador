@@ -1,10 +1,10 @@
 /* generated thread source file - do not edit */
-#include "ADC_Thread.h"
+#include "adc_thread.h"
 
-TX_THREAD ADC_Thread;
-void ADC_Thread_create(void);
-static void ADC_Thread_func(ULONG thread_input);
-static uint8_t ADC_Thread_stack[1024] BSP_PLACE_IN_SECTION_V2(".stack.ADC_Thread") BSP_ALIGN_VARIABLE_V2(BSP_STACK_ALIGNMENT);
+TX_THREAD adc_thread;
+void adc_thread_create(void);
+static void adc_thread_func(ULONG thread_input);
+static uint8_t adc_thread_stack[1024] BSP_PLACE_IN_SECTION_V2(".stack.adc_thread") BSP_ALIGN_VARIABLE_V2(BSP_STACK_ALIGNMENT);
 void tx_startup_err_callback(void *p_instance, void *p_data);
 void tx_startup_common_init(void);
 #if (BSP_IRQ_DISABLED) != BSP_IRQ_DISABLED
@@ -61,7 +61,7 @@ extern bool g_ssp_common_initialized;
 extern uint32_t g_ssp_common_thread_count;
 extern TX_SEMAPHORE g_ssp_common_initialized_semaphore;
 
-void ADC_Thread_create(void)
+void adc_thread_create(void)
 {
     /* Increment count so we will know the number of ISDE created threads. */
     g_ssp_common_thread_count++;
@@ -76,15 +76,15 @@ void ADC_Thread_create(void)
     }
 
     UINT err;
-    err = tx_thread_create (&ADC_Thread, (CHAR *) "ADC_Thrd", ADC_Thread_func, (ULONG) NULL, &ADC_Thread_stack, 1024, 6,
-                            6, 1, TX_AUTO_START);
+    err = tx_thread_create (&adc_thread, (CHAR *) "ADC_Thread", adc_thread_func, (ULONG) NULL, &adc_thread_stack, 1024,
+                            1, 1, 1, TX_AUTO_START);
     if (TX_SUCCESS != err)
     {
-        tx_startup_err_callback (&ADC_Thread, 0);
+        tx_startup_err_callback (&adc_thread, 0);
     }
 }
 
-static void ADC_Thread_func(ULONG thread_input)
+static void adc_thread_func(ULONG thread_input)
 {
     /* Not currently using thread_input. */
     SSP_PARAMETER_NOT_USED (thread_input);
@@ -95,5 +95,5 @@ static void ADC_Thread_func(ULONG thread_input)
     /* Initialize each module instance. */
 
     /* Enter user code for this thread. */
-    ADC_Thread_entry ();
+    adc_thread_entry ();
 }
