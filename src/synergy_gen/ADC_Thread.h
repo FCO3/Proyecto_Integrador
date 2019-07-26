@@ -5,9 +5,9 @@
 #include "tx_api.h"
 #include "hal_data.h"
 #ifdef __cplusplus 
-extern "C" void adc_thread_entry(void);
+extern "C" void ADC_Thread_entry(void);
 #else 
-extern void adc_thread_entry(void);
+extern void ADC_Thread_entry(void);
 #endif
 #include "r_adc.h"
 #include "r_adc_api.h"

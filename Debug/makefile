@@ -11,11 +11,11 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include synergy/ssp/src/driver/r_ioport/subdir.mk
--include synergy/ssp/src/driver/r_gpt/subdir.mk
 -include synergy/ssp/src/driver/r_fmi/subdir.mk
 -include synergy/ssp/src/driver/r_elc/subdir.mk
 -include synergy/ssp/src/driver/r_cgc/hw/subdir.mk
 -include synergy/ssp/src/driver/r_cgc/subdir.mk
+-include synergy/ssp/src/driver/r_agt/subdir.mk
 -include synergy/ssp/src/driver/r_adc/subdir.mk
 -include synergy/ssp/src/bsp/mcu/s7g2/subdir.mk
 -include synergy/ssp/src/bsp/mcu/all/subdir.mk
@@ -41,35 +41,17 @@ endif
 -include ../makefile.defs
 
 # Add inputs and outputs from these tool invocations to the build variables 
-SECONDARY_FLASH += \
-Proyecto_Integrador.srec \
-
-SECONDARY_SIZE += \
-Proyecto_Integrador.siz \
-
 
 # All Target
-all: Proyecto_Integrador.elf secondary-outputs
+all: libm_Proyecto_Integrador.a
 
 # Tool invocations
-Proyecto_Integrador.elf: $(OBJS) $(USER_OBJS)
+libm_Proyecto_Integrador.a: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: Cross ARM C Linker'
-	$(file > Proyecto_Integrador.elf.in,-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O2 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal  -g3 -T "C:\\Users\\SEI203\\e2_studio\\workspace\\Proyecto_Integrador\\script\\S7G2.ld" -Xlinker --gc-sections -L "C:\\Users\\SEI203\\e2_studio\\workspace\\Proyecto_Integrador\\synergy\\ssp\\src\\bsp\\cmsis\\DSP_Lib\\cm4_gcc" -L "C:\\Users\\SEI203\\e2_studio\\workspace\\Proyecto_Integrador\\synergy\\ssp\\src\\framework\\el\\tx\\cm4_gcc" -Wl,-Map,"Proyecto_Integrador.map" --specs=nano.specs --specs=rdimon.specs -o "Proyecto_Integrador.elf" -Wl,--start-group $(OBJS) $(USER_OBJS) $(LIBS) -Wl,--end-group)
-	arm-none-eabi-gcc @"Proyecto_Integrador.elf.in"
+	@echo 'Invoking: Cross ARM GNU Archiver'
+	$(file > libm_Proyecto_Integrador.a.in,-r  "libm_Proyecto_Integrador.a" $(OBJS) $(USER_OBJS) $(LIBS))
+	arm-none-eabi-ar @"libm_Proyecto_Integrador.a.in"
 	@echo 'Finished building target: $@'
-	@echo ' '
-
-Proyecto_Integrador.srec: Proyecto_Integrador.elf
-	@echo 'Invoking: Cross ARM GNU Create Flash Image'
-	arm-none-eabi-objcopy -O srec "Proyecto_Integrador.elf"  "Proyecto_Integrador.srec"
-	@echo 'Finished building: $@'
-	@echo ' '
-
-Proyecto_Integrador.siz: Proyecto_Integrador.elf
-	@echo 'Invoking: Cross ARM GNU Print Size'
-	arm-none-eabi-size --format=berkeley "Proyecto_Integrador.elf"
-	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
@@ -79,15 +61,10 @@ ifneq ($(strip $(OBJS)),)
 	-@ xargs -s 6000 -t -a clean_OBJS.tmp $(RM)
 	-@$(RM) clean_OBJS.tmp
 endif
-ifneq ($(strip $(SECONDARY_FLASH)),)
-	-$(file > clean_SECONDARY_FLASH.tmp, $(SECONDARY_FLASH))
-	-@ xargs -s 6000 -t -a clean_SECONDARY_FLASH.tmp $(RM)
-	-@$(RM) clean_SECONDARY_FLASH.tmp
-endif
-ifneq ($(strip $(SECONDARY_SIZE)),)
-	-$(file > clean_SECONDARY_SIZE.tmp, $(SECONDARY_SIZE))
-	-@ xargs -s 6000 -t -a clean_SECONDARY_SIZE.tmp $(RM)
-	-@$(RM) clean_SECONDARY_SIZE.tmp
+ifneq ($(strip $(ARCHIVES)),)
+	-$(file > clean_ARCHIVES.tmp, $(ARCHIVES))
+	-@ xargs -s 6000 -t -a clean_ARCHIVES.tmp $(RM)
+	-@$(RM) clean_ARCHIVES.tmp
 endif
 ifneq ($(strip $(ASM_DEPS)),)
 	-$(file > clean_ASM_DEPS.tmp, $(ASM_DEPS))
@@ -104,10 +81,8 @@ ifneq ($(strip $(C_DEPS)),)
 	-@ xargs -s 6000 -t -a clean_C_DEPS.tmp $(RM)
 	-@$(RM) clean_C_DEPS.tmp
 endif
-	-$(RM)  Proyecto_Integrador.elf
+	-$(RM)  libm_Proyecto_Integrador.a
 	-@echo ' '
-
-secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
 
 .PHONY: all clean dependents
 
